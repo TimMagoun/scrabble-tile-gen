@@ -78,25 +78,44 @@ module oneTile() {
 }
 
 module allTiles() {
-  // Helper function to calculate cumulative index
-  function countBefore(groupIdx) =
+  // Helper function to calculate cumulative tile count before a given group and pair
+  function countBeforeGroup(groupIdx) =
     groupIdx == 0 ? 0
-    : len(letterData[groupIdx - 1][1]) + countBefore(groupIdx - 1);
+    : countInGroup(groupIdx - 1) + countBeforeGroup(groupIdx - 1);
+
+  function countInGroup(groupIdx) =
+    sumCounts(letterData[groupIdx][1], len(letterData[groupIdx][1]) - 1);
+
+  function sumCounts(pairs, idx) =
+    idx < 0 ? 0
+    : pairs[idx][1] + sumCounts(pairs, idx - 1);
+
+  function countBeforePair(groupIdx, pairIdx) =
+    pairIdx == 0 ? 0
+    : letterData[groupIdx][1][pairIdx - 1][1] + countBeforePair(groupIdx, pairIdx - 1);
 
   for (g = [0:len(letterData) - 1]) {
     points = letterData[g][0];
     pairs = letterData[g][1];
-    baseIdx = countBefore(g);
+    baseIdx = countBeforeGroup(g);
+
     for (j = [0:len(pairs) - 1]) {
-      idx = baseIdx + j;
-      translate(
-        [
-          (idx % 10) * (width + 2),
-          -floor(idx / 10) * (depth + 2),
-          0,
-        ]
-      )
-        LetterTile(pairs[j][0], str(points));
+      letter = pairs[j][0];
+      count = pairs[j][1];
+      pairBaseIdx = baseIdx + countBeforePair(g, j);
+
+      // Render each tile 'count' times
+      for (k = [0:count - 1]) {
+        idx = pairBaseIdx + k;
+        translate(
+          [
+            (idx % 10) * (width + 2),
+            -floor(idx / 10) * (depth + 2),
+            0,
+          ]
+        )
+          LetterTile(letter, str(points));
+      }
     }
   }
 }
