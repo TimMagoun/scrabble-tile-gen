@@ -9,7 +9,8 @@ include <czech_letters.scad>
 letter = "A";
 //Secondary text/symbol - used only in "oneTile" mode (see below) when index is set to -1
 secondaryText = "1";
-font = "Montserrat:style=Bold";
+// font = "Montserrat:style=Bold";
+font = "ArialRoundedMTBold";
 
 /* [Tile size] */
 //x axis
