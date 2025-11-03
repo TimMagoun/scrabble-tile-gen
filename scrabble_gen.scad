@@ -137,10 +137,10 @@ module PlaceLetter(letter) {
     [
       mainLetterXOffset,
       -depth / 2 + mainLetterYOffset,
-      letterDepth < 0 ? height : height - letterDepth,
+      letterDepth < 0 ? height : height - letterDepth - 0.01,
     ]
   ) {
-    linear_extrude(height=abs(letterDepth), convexity=5)
+    linear_extrude(height=abs(letterDepth) + 0.02, convexity=5)
       scale([1, 1, 1])
         text(
           letter,
@@ -157,10 +157,10 @@ module PlaceSecondaryText(secondaryText) {
     [
       width / 2 + secondaryTextXOffset,
       -depth / 2 + secondaryTextYOffset,
-      letterDepth < 0 ? height : height - letterDepth,
+      letterDepth < 0 ? height : height - letterDepth - 0.01,
     ]
   ) {
-    linear_extrude(height=abs(letterDepth), convexity=5)
+    linear_extrude(height=abs(letterDepth) + 0.02, convexity=5)
       scale([1, 1, 1])
         text(
           secondaryText,
