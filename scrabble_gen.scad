@@ -1,5 +1,9 @@
 //Custom variables. All measurements in mm
 
+// Import letter data files
+include <english_letters.scad>
+include <czech_letters.scad>
+
 /* [Text] */
 //Letter or number on the tile - used only in "oneTile" mode (see below) when index is set to -1
 letter = "A";
@@ -37,19 +41,9 @@ textScale = 0.45; // .01
 secondaryTextScale = 0.3; // .01
 
 /* [Hidden] */
-//["letter", "points", number of a given tile in the game]
-letterData = [
-  ["1", [["A", 5], ["D", 3], ["E", 5], ["I", 4], ["K", 3], ["L", 3], ["N", 5], ["O", 6], ["P", 3], ["R", 3], ["S", 4], ["T", 4], ["V", 4]]],
-  ["2", [["Á", 2], ["C", 3], ["H", 3], ["Í", 3], ["J", 2], ["M", 3], ["U", 3], ["Y", 2], ["Z", 2]]],
-  ["3", [["B", 2], ["É", 2], ["Ě", 2]]],
-  ["4", [["Č", 1], ["Ř", 2], ["Š", 2], ["Ů", 1], ["Ý", 2], ["Ž", 1]]],
-  ["5", [["F", 1], ["G", 1], ["Ú", 1]]],
-  ["6", [["Ň", 1]]],
-  ["7", [["Ó", 1], ["Ť", 1]]],
-  ["8", [["Ď", 1]]],
-  ["10", [["X", 1]]],
-  ["", [["", 2]]],
-];
+//["points", [["letter", count], ["letter", count], ...]]
+// Select which letter set to use
+letterData = english_letterData; // Change to czech_letterData for Czech tiles
 
 //Calculate text sizes
 textSize = width > depth ? depth * textScale : width * textScale;
