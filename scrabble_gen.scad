@@ -39,46 +39,16 @@ secondaryTextScale = 0.3; // .01
 /* [Hidden] */
 //["letter", "points", number of a given tile in the game]
 letterData = [
-  ["A", "1", 5],
-  ["Á", "2", 2],
-  ["B", "3", 2],
-  ["C", "2", 3],
-  ["Č", "4", 1],
-  ["D", "1", 3],
-  ["Ď", "8", 1],
-  ["E", "1", 5],
-  ["É", "3", 2],
-  ["Ě", "3", 2],
-  ["F", "5", 1],
-  ["G", "5", 1],
-  ["H", "2", 3],
-  ["I", "1", 4],
-  ["Í", "2", 3],
-  ["J", "2", 2],
-  ["K", "1", 3],
-  ["L", "1", 3],
-  ["M", "2", 3],
-  ["N", "1", 5],
-  ["Ň", "6", 1],
-  ["O", "1", 6],
-  ["Ó", "7", 1],
-  ["P", "1", 3],
-  ["R", "1", 3],
-  ["Ř", "4", 2],
-  ["S", "1", 4],
-  ["Š", "4", 2],
-  ["T", "1", 4],
-  ["Ť", "7", 1],
-  ["U", "2", 3],
-  ["Ú", "5", 1],
-  ["Ů", "4", 1],
-  ["V", "1", 4],
-  ["X", "10", 1],
-  ["Y", "2", 2],
-  ["Ý", "4", 2],
-  ["Z", "2", 2],
-  ["Ž", "4", 1],
-  ["", "", 2],
+  ["1", [["A", 5], ["D", 3], ["E", 5], ["I", 4], ["K", 3], ["L", 3], ["N", 5], ["O", 6], ["P", 3], ["R", 3], ["S", 4], ["T", 4], ["V", 4]]],
+  ["2", [["Á", 2], ["C", 3], ["H", 3], ["Í", 3], ["J", 2], ["M", 3], ["U", 3], ["Y", 2], ["Z", 2]]],
+  ["3", [["B", 2], ["É", 2], ["Ě", 2]]],
+  ["4", [["Č", 1], ["Ř", 2], ["Š", 2], ["Ů", 1], ["Ý", 2], ["Ž", 1]]],
+  ["5", [["F", 1], ["G", 1], ["Ú", 1]]],
+  ["6", [["Ň", 1]]],
+  ["7", [["Ó", 1], ["Ť", 1]]],
+  ["8", [["Ď", 1]]],
+  ["10", [["X", 1]]],
+  ["", [["", 2]]],
 ];
 
 //Calculate text sizes
@@ -100,22 +70,40 @@ if (mode == 1) {
 //Make tile(s):
 //----------------------------------------
 module oneTile() {
-  selectedLetter = index < 0 ? letter : letterData[index][0];
-  selectedPoints = index < 0 ? secondaryText : letterData[index][1];
-
+  // For oneTile, we need to find the correct letter and its points
+  selectedLetter = letter;
+  selectedPoints = secondaryText;
+  if (index >= 0) {
+    // Find the group and the letter within the group
+    group = letterData[index];
+    selectedPoints = group[0];
+    selectedLetter = group[1][0][0]; // Default: first letter in group
+    // Optionally, you can select a specific letter in the group if needed
+  }
   LetterTile(selectedLetter, selectedPoints);
 }
 
 module allTiles() {
-  for (i = [0:len(letterData) - 1]) {
-    translate(
-      [
-        (i % 10) * (width + 2),
-        -floor(i / 10) * (depth + 2),
-        0,
-      ]
-    )
-      LetterTile(letterData[i][0], str(letterData[i][1]));
+  // Helper function to calculate cumulative index
+  function countBefore(groupIdx) =
+    groupIdx == 0 ? 0
+    : len(letterData[groupIdx - 1][1]) + countBefore(groupIdx - 1);
+
+  for (g = [0:len(letterData) - 1]) {
+    points = letterData[g][0];
+    pairs = letterData[g][1];
+    baseIdx = countBefore(g);
+    for (j = [0:len(pairs) - 1]) {
+      idx = baseIdx + j;
+      translate(
+        [
+          (idx % 10) * (width + 2),
+          -floor(idx / 10) * (depth + 2),
+          0,
+        ]
+      )
+        LetterTile(pairs[j][0], str(points));
+    }
   }
 }
 
