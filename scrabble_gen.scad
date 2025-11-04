@@ -33,18 +33,26 @@ mainLetterXOffset = 0; //.01
 //Vertical offset for main letter from bottom edge of the tile
 mainLetterYOffset = 5.5; //.01
 //Horizontal offset for secondary text from right edge of the tile
-secondaryTextXOffset = -2; //.01
+secondaryTextXOffset = -1.5; //.01
 //Vertical offset for secondary text from bottom edge of the tile
-secondaryTextYOffset = 2; //.01
+secondaryTextYOffset = 1.5; //.01
 //Size of the main letter (as a fraction of the tile size)
 textScale = 0.45; // .01
 //Size of secondary text (as a fraction of main text size)
-secondaryTextScale = 0.3; // .01
+secondaryTextScale = 0.35; // .01
+
+/* [Printer Settings] */
+//Printer plate width in mm
+plateWidth = 220; //.1
+//Printer plate depth in mm
+plateDepth = 220; //.1
+//Gap between plates in mm
+plateGap = 100; //.1
 
 /* [Hidden] */
 //["points", [["letter", count], ["letter", count], ...]]
 // Select which letter set to use
-letterData = english_letterData; // Change to czech_letterData for Czech tiles
+letterData = englishRedditAlt2; // Change to czech_letterData for Czech tiles
 
 //Calculate text sizes
 textSize = width > depth ? depth * textScale : width * textScale;
@@ -95,6 +103,11 @@ module allTiles() {
     pairIdx == 0 ? 0
     : letterData[groupIdx][1][pairIdx - 1][1] + countBeforePair(groupIdx, pairIdx - 1);
 
+  // Calculate tiles per plate
+  tilesPerRow = floor(plateWidth / (width + 2));
+  tilesPerCol = floor(plateDepth / (depth + 2));
+  tilesPerPlate = tilesPerRow * tilesPerCol;
+
   for (g = [0:len(letterData) - 1]) {
     points = letterData[g][0];
     pairs = letterData[g][1];
@@ -108,13 +121,19 @@ module allTiles() {
       // Render each tile 'count' times
       for (k = [0:count - 1]) {
         idx = pairBaseIdx + k;
-        translate(
-          [
-            (idx % 10) * (width + 2),
-            -floor(idx / 10) * (depth + 2),
-            0,
-          ]
-        )
+
+        // Calculate which plate this tile belongs to
+        plateNum = floor(idx / tilesPerPlate);
+        tileInPlate = idx % tilesPerPlate;
+
+        // Position within the current plate
+        localX = (tileInPlate % tilesPerRow) * (width + 2);
+        localY = -floor(tileInPlate / tilesPerRow) * (depth + 2);
+
+        // Offset for the plate
+        plateX = plateNum * (plateWidth + plateGap);
+
+        translate([plateX + localX, localY, 0])
           LetterTile(letter, str(points));
       }
     }
