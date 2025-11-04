@@ -25,9 +25,9 @@ radius = 3.0;
 $fn = 200;
 
 /* [Text placement] */
-layerHeight = 0.12;
-//Depth of letter relief (positive for engraved, negative for raised)
-letterDepth = 3 * layerHeight; // 0.1
+layerHeight = 0.12; // 0.04
+//Depth of letter relief as multiple of layer height (positive for engraved, negative for raised)
+letterLayers = 3; // 1
 //Horizontal offset for main letter from the center of the tile
 mainLetterXOffset = 0; //.01
 //Vertical offset for main letter from bottom edge of the tile
@@ -53,6 +53,7 @@ plateGap = 100; //.1
 //["points", [["letter", count], ["letter", count], ...]]
 // Select which letter set to use
 letterData = englishRedditAlt2; // Change to czech_letterData for Czech tiles
+letterDepth = layerHeight * letterLayers;
 
 //Calculate text sizes
 textSize = width > depth ? depth * textScale : width * textScale;
@@ -62,6 +63,10 @@ secondaryTextSize = textSize * secondaryTextScale;
 /* [Modes] */
 mode = 2; // [1:oneTile - set for export via script, 2:allTiles]
 index = -1;
+//Which part to render for multi-color printing
+renderPart = 0; // [0:both, 1:tiles only (white), 2:letters only (black)]
+//Flip tiles 180 degrees (letters face down on print bed)
+letterOnPlate = false;
 if (mode == 1) {
   oneTile();
 } else if (mode == 2) {
@@ -193,17 +198,42 @@ module PlaceSecondaryText(secondaryText) {
 }
 
 module LetterTile(letter, secondText) {
-  if (letterDepth < 0) {
-    union() {
-      color("white") PlaceTile();
-      color("black") PlaceLetter(letter);
-      color("black") PlaceSecondaryText(secondText);
+  rotate([letterOnPlate ? 180 : 0, 0, 0])
+    translate([0, 0, letterOnPlate ? -height : 0]) {
+      if (renderPart == 1) {
+        // Render only tiles (white part) with cutouts for letters
+        if (letterDepth < 0) {
+          // For raised letters, just render the tile base
+          color("white") PlaceTile();
+        } else {
+          // For engraved letters, include the cutouts (subtract the letter shapes)
+          difference() {
+            color("white") PlaceTile();
+            PlaceLetter(letter);
+            PlaceSecondaryText(secondText);
+          }
+        }
+      } else if (renderPart == 2) {
+        // Render only letters (black part)
+        color("black") {
+          PlaceLetter(letter);
+          PlaceSecondaryText(secondText);
+        }
+      } else {
+        // Render both (default)
+        if (letterDepth < 0) {
+          union() {
+            color("white") PlaceTile();
+            color("black") PlaceLetter(letter);
+            color("black") PlaceSecondaryText(secondText);
+          }
+        } else {
+          difference() {
+            color("white") PlaceTile();
+            color("black") PlaceLetter(letter);
+            color("black") PlaceSecondaryText(secondText);
+          }
+        }
+      }
     }
-  } else {
-    difference() {
-      color("white") PlaceTile();
-      color("black") PlaceLetter(letter);
-      color("black") PlaceSecondaryText(secondText);
-    }
-  }
 }
