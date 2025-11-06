@@ -32,10 +32,10 @@ letterLayers = 3; // 1
 mainLetterXOffset = 0; //.01
 //Vertical offset for main letter from bottom edge of the tile
 mainLetterYOffset = 5.5; //.01
-//Horizontal offset for secondary text from right edge of the tile
-secondaryTextXOffset = -1.5; //.01
-//Vertical offset for secondary text from bottom edge of the tile
-secondaryTextYOffset = 1.5; //.01
+//Corner position for secondary text
+secondaryTextCorner = 4; // [1:bottom-left, 2:bottom-right, 3:top-right, 4:top-left]
+//Distance from corner edges
+secondaryTextInset = 1.5; //.01
 //Size of the main letter (as a fraction of the tile size)
 textScale = 0.45; // .01
 //Size of secondary text (as a fraction of main text size)
@@ -180,10 +180,23 @@ module PlaceLetter(letter) {
 }
 
 module PlaceSecondaryText(secondaryText) {
+  // Calculate position based on corner
+  // Corner 1: bottom-left, 2: bottom-right, 3: top-right, 4: top-left
+  xPos =
+    (secondaryTextCorner == 1 || secondaryTextCorner == 4) ? -width / 2 + secondaryTextInset // left side
+    : width / 2 - secondaryTextInset; // right side
+
+  yPos =
+    (secondaryTextCorner == 1 || secondaryTextCorner == 2) ? -depth / 2 + secondaryTextInset // bottom
+    : depth / 2 - secondaryTextInset; // top
+
+  hAlign = (secondaryTextCorner == 1 || secondaryTextCorner == 4) ? "left" : "right";
+  vAlign = (secondaryTextCorner == 1 || secondaryTextCorner == 2) ? "bottom" : "top";
+
   translate(
     [
-      width / 2 + secondaryTextXOffset,
-      -depth / 2 + secondaryTextYOffset,
+      xPos,
+      yPos,
       letterDepth < 0 ? height : height - letterDepth - 0.01,
     ]
   ) {
@@ -194,8 +207,8 @@ module PlaceSecondaryText(secondaryText) {
             secondaryText,
             size=secondaryTextSize,
             font=font,
-            halign="right",
-            valign="bottom"
+            halign=hAlign,
+            valign=vAlign
           );
   }
 }
