@@ -40,6 +40,8 @@ secondaryTextYOffset = 1.5; //.01
 textScale = 0.45; // .01
 //Size of secondary text (as a fraction of main text size)
 secondaryTextScale = 0.35; // .01
+//Amount to thicken secondary text (0 = no change, positive values make it bolder)
+secondaryTextBoldness = 0.05; // 0.01
 
 /* [Printer Settings] */
 //Printer plate width in mm
@@ -187,13 +189,14 @@ module PlaceSecondaryText(secondaryText) {
   ) {
     linear_extrude(height=abs(letterDepth) + 0.02, convexity=5)
       scale([1, 1, 1])
-        text(
-          secondaryText,
-          size=secondaryTextSize,
-          font=font,
-          halign="right",
-          valign="bottom"
-        );
+        offset(r=secondaryTextBoldness)
+          text(
+            secondaryText,
+            size=secondaryTextSize,
+            font=font,
+            halign="right",
+            valign="bottom"
+          );
   }
 }
 
