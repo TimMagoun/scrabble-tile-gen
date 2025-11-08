@@ -12,6 +12,18 @@ secondaryText = "1";
 // font = "Montserrat:style=Bold";
 font = "ArialRoundedMTBold";
 
+// Choose letter dataset (picker/dropdown in the OpenSCAD Customizer)
+// Extend the list with the actual variable names from your included files.
+letterSet = "englishTest"; // ["englishOriginal", "englishRedditAlt1", "englishRedditAlt2", "englishTest"]
+
+// Map the selected name to the actual letterData variable
+letterData =
+  letterSet == "englishTest" ? englishTest
+  : letterSet == "englishOriginal" ? englishOriginal
+  : letterSet == "englishRedditAlt1" ? englishRedditAlt1
+  : letterSet == "englishRedditAlt2" ? englishRedditAlt2
+  : englishTest;
+
 /* [Tile size] */
 //x axis
 width = 19.0; //.01
@@ -33,28 +45,27 @@ mainLetterXOffset = 0; //.01
 //Vertical offset for main letter from bottom edge of the tile
 mainLetterYOffset = 5.5; //.01
 //Corner position for secondary text
-secondaryTextCorner = 4; // [1:bottom-left, 2:bottom-right, 3:top-right, 4:top-left]
+secondaryTextCorner = 1; // [1:bottom-left, 2:bottom-right, 3:top-right, 4:top-left]
 //Distance from corner edges
 secondaryTextInset = 1.5; //.01
 //Size of the main letter (as a fraction of the tile size)
 textScale = 0.45; // .01
 //Size of secondary text (as a fraction of main text size)
-secondaryTextScale = 0.35; // .01
+secondaryTextScale = 0.4; // .01
 //Amount to thicken secondary text (0 = no change, positive values make it bolder)
 secondaryTextBoldness = 0.05; // 0.01
 
 /* [Printer Settings] */
 //Printer plate width in mm
-plateWidth = 220; //.1
+plateWidth = 257; //.1
 //Printer plate depth in mm
-plateDepth = 220; //.1
+plateDepth = 257; //.1
 //Gap between plates in mm
 plateGap = 100; //.1
 
 /* [Hidden] */
 //["points", [["letter", count], ["letter", count], ...]]
 // Select which letter set to use
-letterData = englishRedditAlt2; // Change to czech_letterData for Czech tiles
 letterDepth = layerHeight * letterLayers;
 
 //Calculate text sizes
@@ -68,7 +79,7 @@ index = -1;
 //Which part to render for multi-color printing
 renderPart = 0; // [0:both, 1:tiles only (white), 2:letters only (black)]
 //Flip tiles 180 degrees (letters face down on print bed)
-letterOnPlate = false;
+letterOnPlate = true;
 if (mode == 1) {
   oneTile();
 } else if (mode == 2) {
