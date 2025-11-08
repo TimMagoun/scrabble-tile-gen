@@ -9,8 +9,8 @@ include <czech_letters.scad>
 letter = "A";
 //Secondary text/symbol - used only in "oneTile" mode (see below) when index is set to -1
 secondaryText = "1";
-// font = "Montserrat:style=Bold";
-font = "ArialRoundedMTBold";
+primaryFont = "Arial Rounded MT Bold";
+secondaryFont = "Arial Rounded MT Bold";
 
 // Choose letter dataset (picker/dropdown in the OpenSCAD Customizer)
 // Extend the list with the actual variable names from your included files.
@@ -175,15 +175,15 @@ module PlaceLetter(letter) {
     [
       mainLetterXOffset,
       -depth / 2 + mainLetterYOffset,
-      letterDepth < 0 ? height : height - letterDepth - 0.01,
+      letterDepth < 0 ? height : height - letterDepth - 0.001,
     ]
   ) {
-    linear_extrude(height=abs(letterDepth) + 0.02, convexity=5)
+    linear_extrude(height=abs(letterDepth) + 0.002, convexity=5)
       scale([1, 1, 1])
         text(
           letter,
           size=textSize,
-          font=font,
+          font=primaryFont,
           halign="center",
           valign="bottom"
         );
@@ -208,16 +208,16 @@ module PlaceSecondaryText(secondaryText) {
     [
       xPos,
       yPos,
-      letterDepth < 0 ? height : height - letterDepth - 0.01,
+      letterDepth < 0 ? height : height - letterDepth - 0.001,
     ]
   ) {
-    linear_extrude(height=abs(letterDepth) + 0.02, convexity=5)
+    linear_extrude(height=abs(letterDepth) + 0.002, convexity=5)
       scale([1, 1, 1])
         offset(r=secondaryTextBoldness)
           text(
             secondaryText,
             size=secondaryTextSize,
-            font=font,
+            font=secondaryFont,
             halign=hAlign,
             valign=vAlign
           );
