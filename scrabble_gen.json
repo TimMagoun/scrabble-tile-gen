@@ -28,6 +28,34 @@
             "secondaryTextScale": "0.40000000000000002",
             "textScale": "0.45000000000000001",
             "width": "19"
+        },
+        "New set 1": {
+            "$fn": "200",
+            "depth": "18.5",
+            "height": "4",
+            "index": "-1",
+            "layerHeight": "0.12",
+            "letter": "A",
+            "letterLayers": "3",
+            "letterOnPlate": "true",
+            "letterSet": "englishTest",
+            "mainLetterXOffset": "0",
+            "mainLetterYOffset": "5.5",
+            "mode": "2",
+            "plateDepth": "257",
+            "plateGap": "100",
+            "plateWidth": "257",
+            "primaryFont": "Arial Rounded MT Bold",
+            "radius": "3",
+            "renderPart": "0",
+            "secondaryFont": "Arial Rounded MT Bold",
+            "secondaryText": "1",
+            "secondaryTextBoldness": "0.050000000000000003",
+            "secondaryTextCorner": "1",
+            "secondaryTextInset": "1.5",
+            "secondaryTextScale": "0.40000000000000002",
+            "textScale": "0.45000000000000001",
+            "width": "16.5"
         }
     }
 }

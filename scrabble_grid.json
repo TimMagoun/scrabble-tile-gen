@@ -1,0 +1,14 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "New set 1": {
+            "cellHeight": "20.640000000000001",
+            "cellWidth": "19",
+            "centerGap": "10",
+            "gridHeight": "15",
+            "gridWidth": "15",
+            "lineHeight": "1.5",
+            "lineWidth": "1.5"
+        }
+    }
+}
