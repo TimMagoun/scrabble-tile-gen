@@ -256,10 +256,11 @@ module PlacePointSymbols(points) {
   totalSymbols = numSquares + numCircles;
 
   // Calculate total width of symbol group
-  totalWidth = (totalSymbols - 1) * (symbolSize + symbolSpacing) + (totalSymbols * symbolSize);
+  // Total width = width of all symbols + spacing between them
+  totalWidth = (totalSymbols * symbolSize) + ( (totalSymbols - 1) * symbolSpacing);
 
-  // Starting X position (centered horizontally)
-  startX = -totalWidth / 2 + symbolSize / 2;
+  // Starting X position (leftmost symbol, centered around origin)
+  startX = -totalWidth / 2;
 
   // Y position from bottom of tile
   yPos = -depth / 2 + symbolYOffset;
@@ -271,7 +272,7 @@ module PlacePointSymbols(points) {
   for (i = [0:numSquares - 1]) {
     translate(
       [
-        startX + i * (symbolSize + symbolSpacing),
+        startX + (i * (symbolSize + symbolSpacing)) + symbolSize / 2,
         yPos,
         zPos,
       ]
@@ -285,7 +286,7 @@ module PlacePointSymbols(points) {
   for (i = [0:numCircles - 1]) {
     translate(
       [
-        startX + (numSquares + i) * (symbolSize + symbolSpacing),
+        startX + ( (numSquares + i) * (symbolSize + symbolSpacing)) + symbolSize / 2,
         yPos,
         zPos,
       ]
