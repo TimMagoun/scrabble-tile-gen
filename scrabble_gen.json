@@ -20,10 +20,6 @@
             "radius": "3",
             "renderPart": "2",
             "secondaryText": "1",
-            "secondaryTextBoldness": "0.050000000000000003",
-            "secondaryTextCorner": "2",
-            "secondaryTextInset": "1.5",
-            "secondaryTextScale": "0.40000000000000002",
             "textScale": "0.45000000000000001",
             "width": "19"
         },
@@ -47,10 +43,6 @@
             "radius": "3",
             "renderPart": "1",
             "secondaryText": "1",
-            "secondaryTextBoldness": "0.050000000000000003",
-            "secondaryTextCorner": "2",
-            "secondaryTextInset": "1.5",
-            "secondaryTextScale": "0.29999999999999999",
             "textScale": "0.59999999999999998",
             "width": "17"
         },
@@ -75,10 +67,6 @@
             "radius": "3",
             "renderPart": "1",
             "secondaryText": "1",
-            "secondaryTextBoldness": "0.050000000000000003",
-            "secondaryTextCorner": "2",
-            "secondaryTextInset": "1.5",
-            "secondaryTextScale": "0.29999999999999999",
             "textScale": "0.59999999999999998",
             "width": "17"
         }

@@ -7,7 +7,7 @@ include <czech_letters.scad>
 /* [Text] */
 //Letter or number on the tile - used only in "oneTile" mode (see below) when index is set to -1
 letter = "A";
-//Secondary text/symbol - used only in "oneTile" mode (see below) when index is set to -1
+//Point value for the tile - used only in "oneTile" mode (see below) when index is set to -1
 secondaryText = "1";
 // font = "Montserrat:style=Bold";
 font = "ArialRoundedMTBold";
@@ -46,16 +46,16 @@ letterLayers = 3; // 1
 mainLetterXOffset = 0; //.01
 //Vertical offset for main letter from bottom edge of the tile
 mainLetterYOffset = 5.5; //.01
-//Corner position for secondary text
-secondaryTextCorner = 1; // [1:bottom-left, 2:bottom-right, 3:top-right, 4:top-left]
-//Distance from corner edges
-secondaryTextInset = 1.5; //.01
 //Size of the main letter (as a fraction of the tile size)
 textScale = 0.45; // .01
-//Size of secondary text (as a fraction of main text size)
-secondaryTextScale = 0.4; // .01
-//Amount to thicken secondary text (0 = no change, positive values make it bolder)
-secondaryTextBoldness = 0.05; // 0.01
+
+/* [Point Value Symbols] */
+//Size of point value symbols (squares and circles) in mm
+symbolSize = 1.5; //.01
+//Spacing between point value symbols in mm
+symbolSpacing = 0.5; //.01
+//Distance from bottom edge of tile to center of symbols
+symbolYOffset = 1.5; //.01
 
 /* [Printer Settings] */
 //Printer plate width in mm
@@ -72,7 +72,6 @@ letterDepth = layerHeight * letterLayers;
 
 //Calculate text sizes
 textSize = width > depth ? depth * textScale : width * textScale;
-secondaryTextSize = textSize * secondaryTextScale;
 
 // Modes:
 /* [Modes] */
@@ -154,7 +153,7 @@ module allTiles() {
         plateX = plateNum * (plateWidth + plateGap);
 
         translate([plateX + localX, localY, 0])
-          LetterTile(letter, str(points));
+          LetterTile(letter, points);
       }
     }
   }
@@ -250,7 +249,54 @@ module PlaceSecondaryText(secondaryText) {
   }
 }
 
-module LetterTile(letter, secondText) {
+module PlacePointSymbols(points) {
+  // Calculate number of squares (5 points each) and circles (1 point each)
+  numSquares = floor(points / 5);
+  numCircles = points % 5;
+  totalSymbols = numSquares + numCircles;
+
+  // Calculate total width of symbol group
+  totalWidth = (totalSymbols - 1) * (symbolSize + symbolSpacing) + (totalSymbols * symbolSize);
+
+  // Starting X position (centered horizontally)
+  startX = -totalWidth / 2 + symbolSize / 2;
+
+  // Y position from bottom of tile
+  yPos = -depth / 2 + symbolYOffset;
+
+  // Z position
+  zPos = letterDepth < 0 ? height : height - letterDepth - 0.001;
+
+  // Place squares first
+  for (i = [0:numSquares - 1]) {
+    translate(
+      [
+        startX + i * (symbolSize + symbolSpacing),
+        yPos,
+        zPos,
+      ]
+    ) {
+      linear_extrude(height=abs(letterDepth) + 0.002)
+        square([symbolSize, symbolSize], center=true);
+    }
+  }
+
+  // Place circles after squares
+  for (i = [0:numCircles - 1]) {
+    translate(
+      [
+        startX + (numSquares + i) * (symbolSize + symbolSpacing),
+        yPos,
+        zPos,
+      ]
+    ) {
+      linear_extrude(height=abs(letterDepth) + 0.002)
+        circle(d=symbolSize, $fn=32);
+    }
+  }
+}
+
+module LetterTile(letter, points) {
   rotate([letterOnPlate ? 180 : 0, 0, 0])
     translate([0, 0, letterOnPlate ? -height : 0]) {
       if (renderPart == 1) {
@@ -263,14 +309,14 @@ module LetterTile(letter, secondText) {
           difference() {
             color("white") PlaceTile();
             PlaceLetter(letter);
-            PlaceSecondaryText(secondText);
+            PlacePointSymbols(points);
           }
         }
       } else if (renderPart == 2) {
         // Render only letters (black part)
         color("black") {
           PlaceLetter(letter);
-          PlaceSecondaryText(secondText);
+          PlacePointSymbols(points);
         }
       } else {
         // Render both (default)
@@ -278,13 +324,13 @@ module LetterTile(letter, secondText) {
           union() {
             color("white") PlaceTile();
             color("black") PlaceLetter(letter);
-            color("black") PlaceSecondaryText(secondText);
+            color("black") PlacePointSymbols(points);
           }
         } else {
           difference() {
             color("white") PlaceTile();
             color("black") PlaceLetter(letter);
-            color("black") PlaceSecondaryText(secondText);
+            color("black") PlacePointSymbols(points);
           }
         }
       }
