@@ -9,8 +9,8 @@ include <czech_letters.scad>
 letter = "A";
 //Secondary text/symbol - used only in "oneTile" mode (see below) when index is set to -1
 secondaryText = "1";
-primaryFont = "Arial Rounded MT Bold";
-secondaryFont = "Arial Rounded MT Bold";
+// font = "Montserrat:style=Bold";
+font = "ArialRoundedMTBold";
 
 // Choose letter dataset (picker/dropdown in the OpenSCAD Customizer)
 // Extend the list with the actual variable names from your included files.
@@ -33,6 +33,8 @@ depth = 19.0; //.01
 height = 4.0;
 //Should be between between 0 and 1/2 the shorted side
 radius = 3.0;
+//Bottom chamfer size (0 = no chamfer)
+bottomChamfer = 3.0; //.01
 //Radius detail
 $fn = 200;
 
@@ -161,9 +163,27 @@ module allTiles() {
 //-----------------------------------------
 
 module Tile() {
-  linear_extrude(height=height, center=true)
-    offset(r=radius)
-      square([width - 2 * radius, depth - 2 * radius], center=true);
+  if (bottomChamfer > 0) {
+    // Create tile with bottom chamfer
+    hull() {
+      // Top profile (full size)
+      translate([0, 0, height / 2 - 0.01])
+        linear_extrude(height=0.02, center=true)
+          offset(r=radius)
+            square([width - 2 * radius, depth - 2 * radius], center=true);
+
+      // Bottom profile (reduced by chamfer)
+      translate([0, 0, -height / 2 + 0.01])
+        linear_extrude(height=0.02, center=true)
+          offset(r=radius)
+            square([width - 2 * radius - 2 * bottomChamfer, depth - 2 * radius - 2 * bottomChamfer], center=true);
+    }
+  } else {
+    // Standard tile without chamfer
+    linear_extrude(height=height, center=true)
+      offset(r=radius)
+        square([width - 2 * radius, depth - 2 * radius], center=true);
+  }
 }
 
 module PlaceTile() {
@@ -183,7 +203,7 @@ module PlaceLetter(letter) {
         text(
           letter,
           size=textSize,
-          font=primaryFont,
+          font=font,
           halign="center",
           valign="bottom"
         );
@@ -217,7 +237,7 @@ module PlaceSecondaryText(secondaryText) {
           text(
             secondaryText,
             size=secondaryTextSize,
-            font=secondaryFont,
+            font=font,
             halign=hAlign,
             valign=vAlign
           );
