@@ -164,15 +164,21 @@ module allTiles() {
 
 module Tile() {
   if (bottomChamfer > 0) {
-    // Create tile with bottom chamfer
+    // Create tile with 45-degree bottom chamfer
     hull() {
-      // Top profile (full size)
+      // Top profile (full size) - starts at chamfer height
       translate([0, 0, height / 2 - 0.01])
         linear_extrude(height=0.02, center=true)
           offset(r=radius)
             square([width - 2 * radius, depth - 2 * radius], center=true);
 
-      // Bottom profile (reduced by chamfer)
+      // Profile at chamfer transition (reduced by chamfer amount)
+      translate([0, 0, -height / 2 + bottomChamfer])
+        linear_extrude(height=0.02, center=true)
+          offset(r=radius)
+            square([width - 2 * radius, depth - 2 * radius], center=true);
+
+      // Bottom profile (reduced by chamfer for 45-degree angle)
       translate([0, 0, -height / 2 + 0.01])
         linear_extrude(height=0.02, center=true)
           offset(r=radius)
