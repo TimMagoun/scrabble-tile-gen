@@ -14,7 +14,7 @@ font = "ArialRoundedMTBold";
 
 // Choose letter dataset (picker/dropdown in the OpenSCAD Customizer)
 // Extend the list with the actual variable names from your included files.
-letterSet = "englishTest"; // ["englishOriginal", "englishRedditAlt1", "englishRedditAlt2", "englishTest"]
+letterSet = "englishTest"; // ["englishOriginal", "englishRedditAlt1", "englishRedditAlt2", "englishTest", "englishTestFast"]
 
 // Map the selected name to the actual letterData variable
 letterData =
@@ -22,6 +22,7 @@ letterData =
   : letterSet == "englishOriginal" ? englishOriginal
   : letterSet == "englishRedditAlt1" ? englishRedditAlt1
   : letterSet == "englishRedditAlt2" ? englishRedditAlt2
+  : letterSet == "englishTestFast" ? englishTestFast
   : englishTest;
 
 /* [Tile size] */
@@ -50,10 +51,10 @@ mainLetterYOffset = 5.5; //.01
 secondaryTextCorner = 1; // [1:bottom-left, 2:bottom-right, 3:top-right, 4:top-left]
 //Distance from corner edges
 secondaryTextInset = 1.5; //.01
-//Size of the main letter (as a fraction of the tile size)
-textScale = 0.45; // .01
-//Size of secondary text (as a fraction of main text size)
-secondaryTextScale = 0.4; // .01
+//Size of the main letter in mm
+primaryFontSize = 8.5; // .01
+//Size of secondary text in mm
+secondaryFontSize = 3.5; // .01
 //Amount to thicken secondary text (0 = no change, positive values make it bolder)
 secondaryTextBoldness = 0.05; // 0.01
 
@@ -69,10 +70,6 @@ plateGap = 100; //.1
 //["points", [["letter", count], ["letter", count], ...]]
 // Select which letter set to use
 letterDepth = layerHeight * letterLayers;
-
-//Calculate text sizes
-textSize = width > depth ? depth * textScale : width * textScale;
-secondaryTextSize = textSize * secondaryTextScale;
 
 // Modes:
 /* [Modes] */
@@ -208,7 +205,7 @@ module PlaceLetter(letter) {
       scale([1, 1, 1])
         text(
           letter,
-          size=textSize,
+          size=primaryFontSize,
           font=font,
           halign="center",
           valign="bottom"
@@ -242,7 +239,7 @@ module PlaceSecondaryText(secondaryText) {
         offset(r=secondaryTextBoldness)
           text(
             secondaryText,
-            size=secondaryTextSize,
+            size=secondaryFontSize,
             font=font,
             halign=hAlign,
             valign=vAlign
