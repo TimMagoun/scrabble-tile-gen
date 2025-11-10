@@ -57,7 +57,7 @@
         "prod_run_1": {
             "$fn": "200",
             "bottomChamfer": "0",
-            "depth": "18.800000000000001",
+            "depth": "19",
             "font": "ArialRoundedMTBold",
             "height": "4",
             "index": "-1",
@@ -73,7 +73,7 @@
             "plateGap": "100",
             "plateWidth": "257",
             "radius": "3",
-            "renderPart": "1",
+            "renderPart": "2",
             "secondaryText": "1",
             "secondaryTextBoldness": "0.050000000000000003",
             "secondaryTextCorner": "2",
