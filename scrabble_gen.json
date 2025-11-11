@@ -43,10 +43,12 @@
             "plateDepth": "257",
             "plateGap": "100",
             "plateWidth": "257",
+            "primaryFontSize": "8.5500000000000007",
             "radius": "3",
             "renderPart": "0",
+            "secondaryFontSize": "3.2999999999999998",
             "secondaryText": "1",
-            "secondaryTextBoldness": "0.050000000000000003",
+            "secondaryTextBoldness": "0",
             "secondaryTextCorner": "2",
             "secondaryTextInset": "1.5",
             "width": "17"
